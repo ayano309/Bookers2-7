@@ -3,9 +3,10 @@ class BooksController < ApplicationController
    before_action :correct_user, only:[:edit, :update]
    
   def index
-    @books = Book.all
+    # @books = Book.all
     @book = Book.new
     @user = current_user
+    @books = Book.find(Favorite.group(:book_id).order('count(book_id) desc').pluck(:book_id))
   end
 
   def show
@@ -16,9 +17,6 @@ class BooksController < ApplicationController
     @comments = @book.comments
   end
   
-  def new
-    
-  end
   
   def create
     @book = current_user.books.build(book_params)

@@ -59,9 +59,9 @@
       <% else %>
       <div id="follow-button-#{user.id}">
         <% if current_user &. has_followed?(user) %>
-          <%= render 'relationships/unfollow_button', user: user %>
+          <%= link_to 'フォロー外す',user_unfollows_path(user), data: {method: 'post' } ,class: "btn btn-info"%>
         <% else %>
-         <%= render 'relationships/follow_button', user: user %>
+          <%= link_to 'フォローする', user_follows_path(user), data: {method: 'post'},class: "btn btn-success" %>
         <% end %>
       </div>
       <% end %>
