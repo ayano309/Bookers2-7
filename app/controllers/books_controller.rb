@@ -1,6 +1,8 @@
 class BooksController < ApplicationController
    before_action :authenticate_user!
    before_action :correct_user, only:[:edit, :update]
+   #詳細をみた際にPV数を計測したい場合
+    impressionist :actions=> [:show]
    
   def index
     # @books = Book.all
@@ -26,6 +28,8 @@ class BooksController < ApplicationController
     @newbook = Book.new
     @comment = Comment.new
     @comments = @book.comments
+    #PV数の計測
+    impressionist(@book, nil, unique: [:session_hash])
   end
   
   
