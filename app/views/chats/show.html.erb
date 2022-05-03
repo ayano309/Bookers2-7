@@ -20,11 +20,24 @@
 
   </table>
 
+  <% if @chat.errors.any? %>
+    <div class="alert-box">
+      <h2><%= @chat.errors.count %>errors prohibited this book from being saved:</h2>
+      <ul>
+        <% @chat.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="row mt-5">
-    <%= form_with model:@chat do |f| %>
+    <%= form_with model: @chat do |f| %>
       <%= f.text_field :message %>
       <%= f.hidden_field :room_id %>
       <%= f.submit %>
     <% end %>
   </div>
+
+  <%= link_to 'User一覧へ戻る', users_path , class:"btn btn-success mt-3"%>
 </div>

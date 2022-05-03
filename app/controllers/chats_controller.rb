@@ -1,11 +1,11 @@
 class ChatsController < ApplicationController
-  
+  before_action :reject_norelation, only: [:show]
   def show
     #チャットするユーザーを取得
     @user = User.find(params[:id])
     #現在のユーザーの中間テーブルにあるroom_idの値の配列をroomsに代入
     rooms = current_user.user_rooms.pluck(:room_id)
-    #中間テーブルから一致するチャット相手のユーザーidとroomsの配列の中のidを代入
+    #中間テーブルから一致するチャット相手のユーザーidとroomsの配列の中のidが部屋にあるか確認
     user_rooms = UserRoom.find_by(user_id: @user.id, room_id: rooms)
     
     #user_roomsが空でなければ
@@ -22,6 +22,8 @@ class ChatsController < ApplicationController
     end
     #部屋の中のチャット内容
     @chats = @room.chats
+    #form_withでチャットを送信する際に必要な空のインスタンス
+    #ここでroom.idを@chatに代入しておかないと、form_withで記述するroom_idに値が渡らない
     #新しいチャットを部屋の中で発信する
     @chat = Chat.new(room_id: @room.id)
   end
@@ -35,6 +37,14 @@ class ChatsController < ApplicationController
   private
   def chat_params
     params.require(:chat).permit(:message, :room_id)
+  end
+  
+  #相互フォローじゃなければ一覧画面へリダイレクト
+  def reject_norelation
+    user = User.find(params[:id])
+    unless current_user.has_followed?(user) && user.has_followed?(current_user)
+      redirect_to books_path
+    end
   end
     
 end

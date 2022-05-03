@@ -19,6 +19,8 @@ class User < ApplicationRecord
   #ユーザーは多くのuser_roomを持っていて多くのメッセージ（chat）を発言できる
   has_many :user_rooms, dependent: :destroy
   has_many :chats,dependent: :destroy
+  #中間テーブルを通して相手がいる分の部屋を持っている
+  has_many :rooms, through: :user_rooms
   
   has_one_attached :profile_image
   
