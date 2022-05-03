@@ -24,7 +24,10 @@
           </div>
         </td>
         <td>
-          <p>コメント数：<%= @book.comments.count %></p>
+          <p>コメント数：<%= book.comments.count %></p>
+        </td>
+        <td>
+          <p>閲覧数：<%=  book.impressionist_count %></p>
         </td>
       </tr>
     <% end %>
