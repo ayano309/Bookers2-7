@@ -6,7 +6,18 @@ class BooksController < ApplicationController
     # @books = Book.all
     @book = Book.new
     @user = current_user
-    @books = Book.find(Favorite.group(:book_id).order('count(book_id) desc').pluck(:book_id))
+    
+    #お気に入りが多い順
+    #1週間分のレコードを取り出す
+    to = Time.current.at_end_of_day
+    from = (to - 6.day).at_beginning_of_day
+    #includesで本の投稿とそれに紐づいているいいねしたユーザーの情報が取り出せる
+    #sizeでいいねの要素数を調べて並び替え
+    @books = Book.includes(:favorited_users).sort{
+      |a,b|
+      b.favorited_users.includes(:favorites).where(created_at: from...to).size <=> 
+      a.favorited_users.includes(:favorites).where(created_at: from...to).size
+    }
   end
 
   def show
